@@ -1,0 +1,10 @@
+_site/
+node_modules/
+test-results/
+.env
+.env.*
+*.zip
+*.localguide
+project.json
+class-index-report.json
+*.log
