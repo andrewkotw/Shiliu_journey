@@ -3,7 +3,7 @@ A Little Journey Through Shiliu. Class project of 2026
 
 ## 石榴小旅行
 
-班級作品入口，點擊封面可進入四組學生網站，各組左下角可返回首頁。
+班級作品入口，點擊封面可進入五組學生網站，各組左下角可返回首頁。
 
 正式網址：https://andrewkotw.github.io/Shiliu_journey/
 
