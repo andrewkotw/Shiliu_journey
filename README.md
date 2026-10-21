@@ -5,6 +5,8 @@ A Little Journey Through Shiliu. Class project of 2026
 
 班級作品入口，點擊封面可進入五組學生網站，各組左下角可返回首頁。
 
+首頁精選區每 3.5 秒輪播各組封面、名稱與作品連結，可使用上一張、下一張及暫停按鈕。滑鼠停留或鍵盤焦點位於輪播區時暫停切換；裝置開啟減少動態效果時預設暫停。即使停用 JavaScript，第一組精選與下方全部作品卡片仍可使用。
+
 正式網址：https://andrewkotw.github.io/Shiliu_journey/
 
 這是獨立靜態網站，不需要登入或安裝套件。原始學生 ZIP、可編輯的 `project.json` 及本機備份不放入公開儲存庫。
