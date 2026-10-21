@@ -5,7 +5,9 @@ A Little Journey Through Shiliu. Class project of 2026
 
 班級作品入口，點擊封面可進入五組學生網站，各組左下角可返回首頁。
 
-首頁精選區每 3.5 秒輪播各組封面、名稱與作品連結，可使用上一張、下一張及暫停按鈕。滑鼠停留或鍵盤焦點位於輪播區時暫停切換；裝置開啟減少動態效果時預設暫停。即使停用 JavaScript，第一組精選與下方全部作品卡片仍可使用。
+首頁精選區每 3.5 秒輪播各組相簿內挑選的照片、名稱與作品連結，與下方卡片封面分開設定。圖片下方的小圓點可直接選組，箭頭可切換，並保留暫停按鈕。滑鼠停留或鍵盤焦點位於輪播區時暫停切換；裝置開啟減少動態效果時預設暫停。即使停用 JavaScript，第一組精選與下方全部作品卡片仍可使用。
+
+目前精選：涼泉芳 `group-01/images/photo-03.jpg`、塔吉特觀光工廠 `group-02/images/photo-03.jpg`、塔吉特千層蛋糕 `group-03/images/photo-02.jpg`、石榴火車站 `group-04/images/photo-02.jpg`、品御食光炸雞 `group-05/images/photo-05.jpg`。只引用原有圖片，不改動學生作品或卡片封面。
 
 正式網址：https://andrewkotw.github.io/Shiliu_journey/
 
