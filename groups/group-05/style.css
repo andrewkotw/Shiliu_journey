@@ -1,30 +1,25 @@
-/* 完整網站樣式：修改後上傳可取代整套外觀。保留既有 class、data-theme 與 --cover 即可沿用內容與封面。 */
+/* 完整網站樣式：復古老報紙風格 (Vintage Newspaper Style) */
 
 /* 01 主題色、封面、導覽、內容、照片、影片與手機版 */
 
 :root {
-  --accent: #28744d;
-  --deep: #153d2a;
-  --soft: #edf7f0;
-  --paper: #fff;
-  --ink: #17221b;
-  --muted: #536159;
+  /* 根據復古報紙圖片提取的配色 */
+  --accent: #5c4033;     /* 復古深棕色（標題/強調） */
+  --deep: #2c1e16;       /* 極深的棕黑色（代替純黑） */
+  --soft: #e8dcc7;       /* 稍微深一點的泛黃紙張色（區塊底色） */
+  --paper: #f4eadd;      /* 泛黃老報紙的主底色 */
+  --ink: #332b27;        /* 舊報紙的褪色印刷墨水黑 */
+  --muted: #6b5c51;      /* 次要文字顏色 */
 }
 
-html[data-theme="history"] {
-  --accent: #995b2b;
-  --deep: #51311d;
-  --soft: #f8efe5;
-  --ink: #2d2118;
-  --muted: #6d5b4d;
-}
-
+/* 保留原本的 history 主題作為備用切換，或者直接讓 default 就是報紙風 */
 html[data-theme="modern"] {
   --accent: #1d65a6;
   --deep: #123e66;
   --soft: #eaf3fb;
   --ink: #172535;
   --muted: #536476;
+  --paper: #fff;
 }
 
 * {
@@ -38,8 +33,9 @@ html {
 body {
   margin: 0;
   color: var(--ink);
-  background: #fafafa;
-  font-family: system-ui,-apple-system,"Segoe UI",sans-serif;
+  background: var(--paper); /* 使用泛黃報紙底色 */
+  /* 改用襯線字體(Serif)與標楷體，增加報紙印刷感 */
+  font-family: "Times New Roman", Times, "標楷體", serif; 
   font-size: 17px;
   line-height: 1.75;
 }
@@ -52,19 +48,23 @@ body {
 .skip:focus {
   left: 1rem;
   top: 1rem;
-  background: #fff;
+  background: var(--paper);
   padding: .7rem;
   z-index: 9;
+  border: 1px solid var(--ink);
 }
 
+/* 頂部視覺區 */
 .hero {
   min-height: 65vh;
-  color: #fff;
-  background: linear-gradient(100deg,rgba(0,0,0,.72),rgba(0,0,0,.22)),var(--cover,linear-gradient(135deg,var(--deep),var(--accent)));
+  color: var(--paper);
+  /* 加入復古的深棕色漸層覆蓋 */
+  background: linear-gradient(100deg, rgba(44, 30, 22, 0.85), rgba(92, 64, 51, 0.4)), var(--cover, linear-gradient(135deg, var(--deep), var(--accent)));
   background-size: cover;
   background-position: center;
   display: flex;
   flex-direction: column;
+  border-bottom: 4px double var(--ink); /* 報紙常見的雙線分隔 */
 }
 
 .hero nav {
@@ -73,18 +73,22 @@ body {
   align-items: center;
   gap: 1rem;
   padding: 1rem max(5vw,1rem);
-  background: rgba(0,0,0,.25);
+  background: rgba(0,0,0,.4);
+  border-bottom: 1px solid var(--paper);
 }
 
 nav a {
-  color: #fff;
+  color: var(--paper);
   text-decoration: none;
   font-weight: 700;
   padding: .55rem;
+  text-transform: uppercase; /* 報紙導覽通常較正式 */
+  letter-spacing: 1px;
 }
 
 .brand {
   font-size: 1.15rem;
+  font-weight: bold;
 }
 
 .hero-content {
@@ -95,16 +99,20 @@ nav a {
 
 .tag {
   display: inline-block;
-  background: var(--accent);
+  background: var(--paper);
+  color: var(--ink);
   padding: .2rem .8rem;
-  border-radius: 999px;
+  border-radius: 0; /* 報紙沒有圓角 */
+  border: 1px solid var(--ink);
   font-weight: 700;
+  text-transform: uppercase;
 }
 
 .hero h1 {
   font-size: clamp(2.5rem,7vw,5rem);
   line-height: 1.05;
   margin: .8rem 0;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 .english {
@@ -120,37 +128,48 @@ main {
 section {
   padding: 4.5rem 0;
   scroll-margin-top: 1rem;
+  border-bottom: 1px solid var(--muted); /* 段落間的細分隔線 */
 }
 
 h2 {
   font-size: clamp(2rem,4vw,3rem);
   line-height: 1.2;
   margin: .3rem 0 2rem;
+  text-align: center; /* 報紙大標題通常置中 */
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  padding: 0.5rem 0;
+  text-transform: uppercase;
 }
 
 h3 {
   line-height: 1.35;
+  font-size: 1.5rem;
+  border-bottom: 1px dashed var(--muted); /* 次標題虛線 */
+  padding-bottom: 0.3rem;
 }
 
 .eyebrow {
   color: var(--accent);
   font-weight: 800;
   letter-spacing: .15em;
+  text-transform: uppercase;
 }
 
+/* 網格與區塊：移除陰影與圓角，改為實線邊框 */
 .quick {
   display: grid;
   grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
   gap: 1px;
-  background: #ccd3ce;
+  background: var(--ink);
   padding: 1px;
   margin-top: -2.5rem;
   position: relative;
-  box-shadow: 0 10px 30px #1d2b2220;
+  /* 移除原本的陰影 box-shadow */
 }
 
 .quick div {
-  background: #fff;
+  background: var(--paper);
   padding: 1.2rem;
   display: flex;
   flex-direction: column;
@@ -166,16 +185,18 @@ h3 {
   gap: 2rem;
 }
 
-.bilingual>div,.note,.notice,.highlights {
-  background: var(--paper);
+.bilingual>div, .note, .notice, .highlights {
+  background: var(--soft);
   padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 5px 18px #1d2b2212;
+  border-radius: 0; /* 報紙沒有圓角 */
+  border: 1px solid var(--ink); /* 新增報紙框線 */
+  /* 移除陰影 */
 }
 
 .highlights {
   margin-top: 2rem;
   background: var(--soft);
+  border-top: 4px solid var(--ink); /* 粗頂線 */
 }
 
 .highlights ol {
@@ -187,19 +208,22 @@ h3 {
 }
 
 .highlights li {
-  background: #fff;
+  background: var(--paper);
   padding: 1rem;
-  border-radius: 10px;
+  border-radius: 0;
+  border: 1px solid var(--muted);
 }
 
-.highlights span,.gallery small {
+.highlights span, .gallery small {
   display: block;
   color: var(--muted);
 }
 
-.note,.notice {
+.note, .notice {
   margin-top: 1.2rem;
-  border-left: 5px solid var(--accent);
+  border: 1px solid var(--ink);
+  border-left: 5px solid var(--ink); /* 強調左側粗線 */
+  background: var(--paper);
 }
 
 .gallery {
@@ -210,10 +234,10 @@ h3 {
 
 .gallery figure {
   margin: 0;
-  background: #fff;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 5px 20px #1d2b2218;
+  background: var(--paper);
+  border-radius: 0;
+  border: 1px solid var(--ink); /* 照片加上老式邊框 */
+  padding: 0.5rem; /* 類似拍立得或舊照片白邊 */
 }
 
 .gallery img {
@@ -221,21 +245,26 @@ h3 {
   width: 100%;
   aspect-ratio: 4/3;
   object-fit: cover;
+  filter: sepia(30%) contrast(110%); /* 讓圖片自帶微復古濾鏡效果 */
 }
 
 .gallery figcaption {
-  padding: 1rem;
+  padding: 0.8rem 0.5rem 0.2rem;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.9rem;
 }
 
 .video-wrap {
   position: relative;
   aspect-ratio: 16/9;
   background: #111;
-  border-radius: 16px;
+  border-radius: 0;
+  border: 2px solid var(--ink);
   overflow: hidden;
 }
 
-.video-wrap iframe,.video-wrap video {
+.video-wrap iframe, .video-wrap video {
   border: 0;
   width: 100%;
   height: 100%;
@@ -243,36 +272,43 @@ h3 {
 
 .map-link {
   display: inline-block;
-  background: var(--accent);
-  color: #fff;
+  background: var(--ink);
+  color: var(--paper);
   padding: .8rem 1.1rem;
-  border-radius: 8px;
+  border-radius: 0;
   font-weight: 700;
+  border: 1px solid var(--ink);
+}
+.map-link:hover {
+  background: var(--paper);
+  color: var(--ink);
 }
 
 footer {
   text-align: center;
   background: var(--deep);
-  color: #fff;
+  color: var(--paper);
   padding: 2.5rem;
+  border-top: 4px double var(--paper);
 }
 
 .theme-note {
   opacity: .75;
   font-size: .9rem;
+  font-family: sans-serif;
 }
 
 .top {
   position: fixed;
   right: 1rem;
   bottom: 1rem;
-  background: var(--accent);
-  color: #fff;
+  background: var(--ink);
+  color: var(--paper);
   padding: .65rem 1rem;
-  border-radius: 999px;
+  border-radius: 0; /* 改為方形按鈕 */
   text-decoration: none;
   font-weight: 700;
-  box-shadow: 0 4px 16px #0004;
+  border: 2px solid var(--paper);
 }
 
 @media (max-width:700px) {
@@ -302,19 +338,18 @@ footer {
 }
 
 :focus-visible {
-  outline: 3px solid #f4b400;
+  outline: 3px solid var(--ink);
   outline-offset: 3px;
 }
 
-
-/* 02 照片放大、YouTube 與地圖 */
+/* 02 照片放大、YouTube 與地圖 (調整邊框與底色) */
 
 .photo-zoom {
   display: block;
   width: 100%;
   padding: 0;
   border: 0;
-  background: #111;
+  background: var(--ink);
   cursor: zoom-in;
 }
 
@@ -332,15 +367,14 @@ footer {
   max-height: 94vh;
   margin: auto;
   padding: 3.25rem 1rem 1rem;
-  border: 0;
-  border-radius: 16px;
-  background: #111;
-  color: #fff;
-  box-shadow: 0 16px 60px #0008;
+  border: 4px double var(--ink);
+  border-radius: 0;
+  background: var(--paper); /* 燈箱也改為報紙底色 */
+  color: var(--ink);
 }
 
 .lightbox::backdrop {
-  background: #000c;
+  background: rgba(0,0,0,0.85);
 }
 
 .lightbox figure {
@@ -354,21 +388,23 @@ footer {
   max-width: 100%;
   max-height: 78vh;
   object-fit: contain;
+  border: 1px solid var(--ink);
 }
 
 .lightbox figcaption {
   padding: .8rem 0 0;
   text-align: center;
+  font-family: serif;
 }
 
 .lightbox-close {
   position: absolute;
   right: .8rem;
   top: .7rem;
-  border: 2px solid #fff;
-  background: #fff;
-  color: #17221b;
-  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 0;
   padding: .45rem .85rem;
   font: inherit;
   font-weight: 800;
@@ -381,26 +417,18 @@ footer {
   place-content: center;
   text-align: center;
   padding: 1.5rem;
-  color: #fff;
+  color: var(--paper);
 }
 
-.youtube-local-message p {
-  margin: .25rem 0;
-}
-
-.youtube-local-message a,.youtube-open-link a {
+.youtube-local-message a, .youtube-open-link a {
   display: inline-block;
-  background: var(--accent);
-  color: #fff;
+  background: var(--ink);
+  color: var(--paper);
   padding: .7rem 1rem;
-  border-radius: 8px;
+  border-radius: 0;
   font-weight: 800;
   text-decoration: none;
-}
-
-.youtube-open-link {
-  text-align: center;
-  margin: .8rem 0 0;
+  border: 1px solid var(--paper);
 }
 
 .map-embed {
@@ -408,82 +436,34 @@ footer {
   aspect-ratio: 16/9;
   min-height: 260px;
   margin-top: 1.5rem;
-  border: 1px solid #ccd3ce;
-  border-radius: 16px;
+  border: 1px solid var(--ink);
+  border-radius: 0;
   overflow: hidden;
   background: var(--soft);
 }
 
-.map-embed iframe {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-@media (max-width:700px) {
-  .lightbox {
-    width: 98vw;
-    padding: 3.1rem .5rem .5rem;
-  }
-  .lightbox img {
-    max-height: 72vh;
-  }
-  .map-embed {
-    min-height: 240px;
-    aspect-ratio: 4/3;
-  }
-}
-
-
-/* 03 參觀亮點 */
+/* 03 參觀亮點 (改為報紙專欄風格) */
 
 .highlights {
   position: relative;
   overflow: hidden;
   margin-top: 2rem;
   padding: clamp(1.5rem,4vw,2.5rem);
-  border: 1px solid #d7ddd8;
-  border-radius: 24px;
-  background: linear-gradient(135deg,var(--soft),#fff);
-  box-shadow: 0 12px 32px #1d2b2214;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--paper);
+  /* 移除多餘背景圖案與陰影 */
 }
 
 .highlights::after {
-  content: "";
-  position: absolute;
-  right: -70px;
-  top: -90px;
-  width: 190px;
-  height: 190px;
-  border-radius: 50%;
-  background: var(--accent);
-  opacity: .07;
-  pointer-events: none;
+  display: none; /* 移除現代感裝飾圓圈 */
 }
 
 .highlights-heading {
   position: relative;
   z-index: 1;
   margin-bottom: 1.5rem;
-}
-
-.highlights-heading .eyebrow {
-  margin: 0 0 .2rem;
-  font-size: .8rem;
-}
-
-.highlights-heading h3 {
-  margin: 0;
-  font-size: clamp(1.5rem,3vw,2rem);
-}
-
-.highlights-heading h3 span {
-  display: inline;
-  margin-left: .35rem;
-  color: var(--muted);
-  font-size: .65em;
-  font-weight: 650;
+  text-align: center;
 }
 
 .highlights ol {
@@ -492,7 +472,7 @@ footer {
   counter-reset: highlight-card;
   display: grid;
   grid-template-columns: repeat(3,minmax(0,1fr));
-  gap: 1rem;
+  gap: 1.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -502,76 +482,33 @@ footer {
   counter-increment: highlight-card;
   position: relative;
   min-width: 0;
-  min-height: 150px;
-  padding: 4.25rem 1.25rem 1.25rem;
-  border: 1px solid #dde3df;
-  border-top: 4px solid var(--accent);
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 7px 18px #1d2b2212;
-  transition: transform .2s ease,box-shadow .2s ease;
+  padding: 1.5rem;
+  border: 1px solid var(--ink);
+  border-top: 3px solid var(--ink);
+  border-radius: 0;
+  background: var(--soft);
+  transition: transform .2s ease;
 }
 
 .highlights li::before {
-  content: counter(highlight-card,decimal-leading-zero);
-  position: absolute;
-  left: 1.2rem;
-  top: 1rem;
-  display: grid;
-  place-items: center;
-  width: 2.4rem;
-  height: 2.4rem;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  font-size: .88rem;
+  content: counter(highlight-card,decimal-leading-zero) ".";
+  position: static; /* 調整編號位置至文內 */
+  display: block;
+  width: auto;
+  height: auto;
+  background: transparent;
+  color: var(--ink);
+  font-size: 1.2rem;
   font-weight: 850;
-  letter-spacing: .03em;
-}
-
-.highlights li strong {
-  display: block;
-  font-size: 1.08rem;
-  line-height: 1.5;
-}
-
-.highlights li>span {
-  display: block;
-  margin-top: .45rem;
-  color: var(--muted);
-  font-size: .92rem;
-  line-height: 1.55;
+  margin-bottom: 0.5rem;
 }
 
 .highlights li:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 25px #1d2b2220;
+  background: var(--paper);
 }
 
-@media (max-width:780px) {
-  .highlights ol {
-    grid-template-columns: 1fr;
-  }
-  .highlights li {
-    min-height: 0;
-    padding: 1.2rem 1.2rem 1.2rem 4.6rem;
-  }
-  .highlights li::before {
-    top: 1.15rem;
-  }
-}
-
-@media (prefers-reduced-motion:reduce) {
-  .highlights li {
-    transition: none;
-  }
-  .highlights li:hover {
-    transform: none;
-  }
-}
-
-
-/* 04 小組心得 */
+/* 04 小組心得 (改為報紙引用區塊) */
 
 .reflection-grid {
   display: grid;
@@ -583,85 +520,41 @@ footer {
   position: relative;
   margin: 0;
   padding: 1.6rem 1.5rem 1.4rem;
-  border: 1px solid #d7e0da;
-  border-radius: 18px;
-  background: linear-gradient(145deg,#fff,var(--soft));
-  box-shadow: 0 8px 24px #1d2b2212;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--soft);
 }
 
 .reflection-card::before {
   content: "“";
   position: absolute;
   right: 1rem;
-  top: .15rem;
-  color: var(--accent);
-  font-family: Georgia,serif;
+  top: 0.5rem;
+  color: var(--ink);
+  font-family: Georgia, serif;
   font-size: 4rem;
   line-height: 1;
-  opacity: .16;
+  opacity: 0.2;
 }
 
 .reflection-number {
   display: inline-block;
   margin-bottom: .8rem;
-  color: var(--accent);
-  font-size: .78rem;
-  font-weight: 850;
-  letter-spacing: .12em;
-}
-
-.reflection-card blockquote {
-  margin: 0;
   color: var(--ink);
-}
-
-.reflection-card blockquote p {
-  margin: .45rem 0;
+  font-size: .85rem;
+  font-weight: 850;
+  letter-spacing: .1em;
+  text-decoration: underline;
 }
 
 .reflection-by {
   margin: 1rem 0 0;
   padding-top: .8rem;
-  border-top: 1px solid #d7e0da;
-  color: var(--accent);
+  border-top: 1px solid var(--ink);
+  color: var(--ink);
   font-weight: 800;
+  text-align: right; /* 署名靠右 */
 }
-
-@media (max-width:700px) {
-  .reflection-grid {
-    grid-template-columns: 1fr;
-  }
-  .reflection-card {
-    padding: 1.35rem 1.2rem;
-  }
-}
-
-
-/* 推薦原因與參觀提醒的雙語閱讀 */
-
-.visit-language-tools {
-  margin-top: 2rem;
-}
-
-.visit-language-tools p {
-  color: var(--muted);
-  font-size: 1rem;
-}
-
-.note h3 small,.notice h3 small {
-  font-size: .8em;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.note h3,.notice h3 {
-  line-height: 1.6;
-}
-
-.visit-language-button:hover {
-  filter: brightness(.9);
-}
-
 
 /* 05 基本換行與鍵盤焦點 */
 
@@ -669,11 +562,6 @@ body {
   overflow-wrap: anywhere;
 }
 
-img,video,iframe {
+img, video, iframe {
   max-width: 100%;
-}
-
-:focus-visible {
-  outline: 3px solid #f4b400;
-  outline-offset: 3px;
 }
