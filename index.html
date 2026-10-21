@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="跟著學生的鏡頭與中英文介紹，探索在地美食與地方故事。"><title>石榴小旅行｜班級作品入口</title><link rel="stylesheet" href="class-style.css"></head>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="跟著學生的鏡頭與中英文介紹，探索在地美食與地方故事。"><title>石榴小旅行｜班級作品入口</title><link rel="stylesheet" href="class-style.css?v=eb7d1b18a0c1"></head>
 <body><a class="skip-link" href="#works">跳到作品列表</a>
 <header class="site-header"><a class="brand" href="./index.html"><span class="brand-mark" aria-hidden="true">旅</span><span>石榴小旅行<small lang="en">SHILIU FIELD NOTES</small></span></a><a class="header-link" href="#works">瀏覽作品 <span aria-hidden="true">↘</span></a></header>
 <main>
@@ -46,6 +46,8 @@
   const dots = [...root.querySelectorAll('[data-carousel-dot]')]
   const reduced = matchMedia('(prefers-reduced-motion: reduce)')
   let index = 0
+  let requestedIndex = 0
+  let loading = false
   let paused = reduced.matches
   let hovered = false
   let focused = false
@@ -54,41 +56,69 @@
   const pools = slides.map((slide) => {
     try { return JSON.parse(slide.dataset.photoPool || '[]') } catch { return [] }
   })
-  const randomizePhoto = () => {
-    const request = ++photoRequest
-    const slide = slides[index]
-    const target = slide.querySelector('img')
-    const photo = pickPhoto(pools[index])
-    if (!photo) return
-    slide.dataset.photoChoice = photo.src
-    // Keep the currently loaded photo until the randomly selected one is ready.
-    const preload = new Image()
-    preload.onload = () => {
-      if (request !== photoRequest || !preload.naturalWidth) return
-      target.src = photo.src
-      target.alt = photo.alt
-      slide.dataset.photoState = 'ready'
-    }
-    preload.onerror = () => {
-      if (request === photoRequest) slide.dataset.photoState = 'fallback'
-    }
-    slide.dataset.photoState = 'loading'
-    preload.src = photo.src
+  const decodeWithTimeout = async (image) => {
+    let deadline
+    try {
+      await Promise.race([
+        image.decode(),
+        new Promise((_, reject) => { deadline = setTimeout(() => reject(new Error('image timeout')), 12000) }),
+      ])
+      if (!image.naturalWidth) throw new Error('empty image')
+    } finally { clearTimeout(deadline) }
   }
   const schedule = () => {
     clearTimeout(timer)
-    if (!paused && !hovered && !focused && !document.hidden) {
-      timer = setTimeout(() => show(index + 1), 3500)
+    if (!loading && !paused && !hovered && !focused && !document.hidden) {
+      timer = setTimeout(() => show(requestedIndex + 1), 3500)
     }
   }
-  const show = (next) => {
-    index = (next + slides.length) % slides.length
+  const show = async (next) => {
+    clearTimeout(timer)
+    requestedIndex = (next + slides.length) % slides.length
+    const destination = requestedIndex
+    const request = ++photoRequest
+    const slide = slides[destination]
+    const previousImage = slide.querySelector('img')
+    const photo = pickPhoto(pools[destination])
+    let preparedImage = previousImage
+    let state = 'ready'
+    loading = true
+    root.dataset.carouselState = 'loading'
+    if (photo) {
+      slide.dataset.photoChoice = photo.src
+      const preload = new Image()
+      preload.alt = photo.alt
+      preload.src = photo.src
+      try {
+        await decodeWithTimeout(preload)
+        preparedImage = preload
+      } catch {
+        state = 'fallback'
+      }
+    }
+    if (request !== photoRequest) return
+    if (preparedImage === previousImage) {
+      try { await decodeWithTimeout(previousImage) } catch {
+        if (request !== photoRequest) return
+        loading = false
+        root.dataset.carouselState = 'idle'
+        schedule()
+        return // Neither image is usable: keep the current group on screen.
+      }
+    }
+    if (request !== photoRequest) return
+    // One synchronous commit: decoded pixels, title, link and dot change together.
+    // Never expose the destination's old image or fade through the background.
+    if (preparedImage !== previousImage) previousImage.replaceWith(preparedImage)
+    slide.dataset.photoState = state
+    index = destination
     slides.forEach((slide, position) => { slide.hidden = position !== index })
     dots.forEach((dot, position) => {
       if (position === index) dot.setAttribute('aria-current', 'true')
       else dot.removeAttribute('aria-current')
     })
-    randomizePhoto()
+    loading = false
+    root.dataset.carouselState = 'idle'
     schedule()
   }
   const updateToggle = () => {
@@ -96,8 +126,8 @@
     toggle.setAttribute('aria-label', paused ? '繼續自動輪播' : '暫停自動輪播')
     schedule()
   }
-  root.querySelector('[data-carousel-prev]').addEventListener('click', () => show(index - 1))
-  root.querySelector('[data-carousel-next]').addEventListener('click', () => show(index + 1))
+  root.querySelector('[data-carousel-prev]').addEventListener('click', () => show(requestedIndex - 1))
+  root.querySelector('[data-carousel-next]').addEventListener('click', () => show(requestedIndex + 1))
   dots.forEach((dot, position) => dot.addEventListener('click', () => show(position)))
   toggle.addEventListener('click', () => { paused = !paused; updateToggle() })
   root.addEventListener('pointerenter', (event) => { if (event.pointerType === 'mouse') { hovered = true; schedule() } })
@@ -106,7 +136,7 @@
   root.addEventListener('focusout', (event) => { focused = root.contains(event.relatedTarget); schedule() })
   document.addEventListener('visibilitychange', schedule)
   reduced.addEventListener('change', () => { paused = reduced.matches; updateToggle() })
-  window.addEventListener('pagehide', () => clearTimeout(timer))
+  window.addEventListener('pagehide', () => { clearTimeout(timer); photoRequest++; loading = false })
   window.addEventListener('pageshow', schedule)
   controls.hidden = false
   root.classList.add('has-controls')
